@@ -83,7 +83,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ],
           ),
           floatingActionButton: FloatingActionButton(
-            heroTag: '1',
             onPressed: () async {
               final newOne = await Navigator.of(context)
                   .push<Note>(MaterialPageRoute(builder: (ctx) {

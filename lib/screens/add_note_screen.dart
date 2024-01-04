@@ -107,16 +107,13 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                 height: MediaQuery.of(context).size.height,
                 fit: BoxFit.cover),
           ),
-        Hero(
-          tag: '1',
-          child: Container(
-            width: _size!.width,
-            height: _size!.height,
-            color: Theme.of(context)
-                .colorScheme
-                .background
-                .withOpacity(_image == null ? 1 : .85),
-          ),
+        Container(
+          width: _size!.width,
+          height: _size!.height,
+          color: Theme.of(context)
+              .colorScheme
+              .background
+              .withOpacity(_image == null ? 1 : .85),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
