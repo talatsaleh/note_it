@@ -29,13 +29,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   late Size size;
   List<Note> _notes = [];
   File? _backgroundImage;
-  bool _onlyOne = true;
-
-  @override
-  void initState() {
-    ref.read(notesProvider.notifier).getNotes();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

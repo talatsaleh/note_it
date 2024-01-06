@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:notes_app/screens/add_note_screen.dart';
 import 'package:notes_app/screens/home_screen.dart';
 
 import '../modules/note_module.dart';
@@ -40,7 +41,8 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
 
   @override
   void initState() {
-    _controller = AnimationController(vsync: this,duration: Duration(milliseconds: 500));
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     color = mainColors[Random().nextInt(4)];
     super.initState();
   }
@@ -60,10 +62,7 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
       },
       onLongPress: () {
         final RenderBox overlay =
-        Overlay
-            .of(context)
-            .context
-            .findRenderObject() as RenderBox;
+            Overlay.of(context).context.findRenderObject() as RenderBox;
         showMenu(
           context: context,
           position: RelativeRect.fromRect(
@@ -85,7 +84,16 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
                 ],
               ),
             ),
-            const PopupMenuItem(
+            PopupMenuItem(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+                  return NoteViewScreen(
+                    note: widget.note,
+                    editMode: true,
+                    color: widget.note.color ?? color,
+                  );
+                }));
+              },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -106,13 +114,14 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
             maxHeight: widget.height,
             minHeight: (widget.height ~/ 3).toDouble()),
         padding:
-        const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
+            const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
         decoration: BoxDecoration(
             image: widget.note.image == null
                 ? null
-                : DecorationImage(image: FileImage(widget.note.image!),
-                fit: BoxFit.cover,
-                opacity: .45),
+                : DecorationImage(
+                    image: FileImage(widget.note.image!),
+                    fit: BoxFit.cover,
+                    opacity: .45),
             color: widget.note.color ?? color,
             borderRadius: BorderRadius.circular(20)),
         child: Column(
@@ -121,14 +130,10 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
           children: [
             Text(
               widget.note.title,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -139,13 +144,9 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
               widget.note.body,
               maxLines: 10,
               overflow: TextOverflow.ellipsis,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(
-                color: Colors.black87,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Colors.black87,
+                  ),
             ),
             const SizedBox(
               height: 5,
@@ -157,13 +158,9 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
                 widget.note.createdAt.isToday()
                     ? DateFormat.jmz().format(widget.note.createdAt)
                     : DateFormat.yMMMd().format(widget.note.createdAt),
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .labelSmall!
-                    .copyWith(
-                  color: Colors.black38,
-                ),
+                style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                      color: Colors.black38,
+                    ),
               ),
             )
           ],
