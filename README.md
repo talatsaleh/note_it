@@ -1,16 +1,24 @@
-# notes_app
+# Note It
 
-save your notes and ideas.
+![App Screenshot](https://github.com/talatsaleh/note_it/assets/56842486/64483df4-75bb-4555-a040-e2a55bae944b)
 
-## Getting Started
+### Descripiton
 
-This project is a starting point for a Flutter application.
+A notes app is a software application that allows you to create, edit, and manage your notes on your device. Notes can be text, images, audio, or other types of content that you want to remember or organize. A notes app can help you with various tasks, such as:
 
-A few resources to get you started if this is your first Flutter project:
+## Features
+- Writing down your ideas, thoughts, or plans
+- Making lists of tasks, groceries, or goals
+- Saving important information, such as passwords, phone numbers - or addresses
+- Taking notes during meetings, lectures, or classes
+- Capturing photos and set it as a background for note or app
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Snapshots
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+https://github.com/talatsaleh/note_it/assets/56842486/d328c3ed-d5ef-4810-af7b-e764c9e82eed
+
+## Download
+
+- [Note It](https://github.com/talatsaleh/note_it/releases/download/latest/notes.apk)
