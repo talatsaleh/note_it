@@ -11,7 +11,7 @@ import '../modules/note_module.dart';
 class NoteNotifier extends StateNotifier<List<Note>> {
   NoteNotifier() : super([]);
 
-  void getNotes() async {
+  Future<void> getNotes() async {
     final db = await _getDataBase();
     final data = await db.query('notes');
     print(data);

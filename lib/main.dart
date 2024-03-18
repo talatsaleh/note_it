@@ -8,7 +8,9 @@ import 'package:notes_app/providers/localization_provider.dart';
 import 'package:notes_app/providers/note_provider.dart';
 import 'package:notes_app/screens/home_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:notes_app/screens/splash_screen.dart';
 import 'package:notes_app/utils/localization/app_localization.dart';
+import 'package:notes_app/utils/thems.dart';
 
 void main() {
   runApp(
@@ -18,13 +20,40 @@ void main() {
   );
 }
 
+
+
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
+  Future<void> getAll(WidgetRef ref) async {
+
+      await ref.read(notesProvider.notifier).getNotes();
+      await ref.read(localizationProvider.notifier).getLocale();
+      await ref.read(imageProvider.notifier).getImage();
+
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(imageProvider.notifier).getImage();
-    ref.read(notesProvider.notifier).getNotes();
+    return FutureBuilder(
+        future: getAll(ref),
+        builder: (context, snap) {
+          if (snap.connectionState == ConnectionState.waiting) {
+            return const SplashScreen();
+          }
+          if (snap.connectionState == ConnectionState.done) {
+            return const NoteIt();
+          }
+          return const SplashScreen();
+        });
+  }
+}
+
+class NoteIt extends ConsumerWidget {
+  const NoteIt({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       locale: ref.watch(localizationProvider),
       supportedLocales: const [
@@ -50,13 +79,9 @@ class MyApp extends ConsumerWidget {
       //   return supportedLocals.first;
       // },
       title: 'Notes',
-      theme: ThemeData.from(
-        textTheme: GoogleFonts.signikaTextTheme(),
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.deepPurpleAccent, brightness: Brightness.dark),
-        useMaterial3: true,
-      ),
+      theme: appTheme,
       home: const HomeScreen(),
     );
   }
 }
+

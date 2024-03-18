@@ -16,7 +16,7 @@ class ImageNotifier extends StateNotifier<File?> {
     return appDocImageFolder;
   }
 
-  void getImage() async {
+  Future <void> getImage() async {
     final Directory appDocImageFolder = await _getPath();
     final list = appDocImageFolder.listSync(recursive: true);
     if (list.isEmpty) {
