@@ -9,6 +9,7 @@ import 'package:notes_app/providers/note_provider.dart';
 import 'package:notes_app/screens/add_note_screen.dart';
 import 'package:notes_app/modules/note_module.dart';
 import 'package:notes_app/screens/settings_screen.dart';
+import 'package:notes_app/utils/localization/app_localization.dart';
 import 'package:notes_app/widgets/note_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -143,7 +144,7 @@ class NothingToSeeHere extends StatelessWidget {
                   ),
             ),
             Text(
-              'There is no Notes to see, try to add one',
+              'there_is_no_widget'.tr(context),
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground,
                   ),

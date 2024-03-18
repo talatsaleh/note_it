@@ -1,10 +1,13 @@
 import 'dart:io';
-
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:notes_app/providers/image_provider.dart';
+import 'package:notes_app/providers/localization_provider.dart';
 import 'package:notes_app/providers/note_provider.dart';
+import 'package:notes_app/utils/localization/app_localization.dart';
+import 'package:notes_app/utils/localization/detect_language.dart';
 
 import '../modules/note_module.dart';
 
@@ -44,6 +47,7 @@ class _NoteViewScreenState extends ConsumerState<NoteViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Locale appLocale = Localizations.localeOf(context);
     _backgroundImage = ref.read(imageProvider);
     return Stack(
       children: [
@@ -74,9 +78,9 @@ class _NoteViewScreenState extends ConsumerState<NoteViewScreen> {
                       if (widget.editMode == true) {
                         if (_body.text.trim().isEmpty ||
                             _title.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('title or body is empty!')));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text('title or body is empty!'.tr(context))));
                           setState(() {
                             widget.editMode = false;
                           });
@@ -143,6 +147,8 @@ class _NoteViewScreenState extends ConsumerState<NoteViewScreen> {
                             controller: _title,
                             maxLines: null,
                             minLines: 1,
+                            textDirection:
+                                textDirection(appLocale, _title.text),
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
@@ -162,7 +168,11 @@ class _NoteViewScreenState extends ConsumerState<NoteViewScreen> {
                           ),
                         if (!widget.editMode)
                           Container(
-                            alignment: Alignment.topLeft,
+                            alignment:
+                                detectLanguage(string: widget.note.title) ==
+                                        'ar'
+                                    ? Alignment.topRight
+                                    : Alignment.topLeft,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),
                             decoration: BoxDecoration(
@@ -171,6 +181,8 @@ class _NoteViewScreenState extends ConsumerState<NoteViewScreen> {
                                     : Colors.black38,
                                 borderRadius: BorderRadius.circular(20)),
                             child: Text(
+                              textDirection:
+                                  textDirection(appLocale, widget.note.title),
                               widget.note.title,
                               style: Theme.of(context)
                                   .textTheme
@@ -184,12 +196,14 @@ class _NoteViewScreenState extends ConsumerState<NoteViewScreen> {
                           height: 10,
                         ),
                         Text(
-                          DateFormat.MMMMEEEEd().format(widget.note.createdAt),
+                          DateFormat.MMMMEEEEd(appLocale.languageCode)
+                              .format(widget.note.createdAt),
                           style: Theme.of(context)
                               .textTheme
                               .labelMedium!
                               .copyWith(
-                                color: Theme.of(context).colorScheme.onBackground,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
                               ),
                         ),
                         const SizedBox(
@@ -197,15 +211,15 @@ class _NoteViewScreenState extends ConsumerState<NoteViewScreen> {
                         ),
                         if (widget.editMode)
                           TextField(
+                            textDirection: textDirection(appLocale, _body.text),
                             controller: _body,
                             maxLines: null,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onBackground,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                    ),
                             decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 10),
@@ -219,7 +233,10 @@ class _NoteViewScreenState extends ConsumerState<NoteViewScreen> {
                           ),
                         if (!widget.editMode)
                           Container(
-                            alignment: Alignment.topLeft,
+                            alignment:
+                                detectLanguage(string: widget.note.body) == 'ar'
+                                    ? Alignment.topRight
+                                    : Alignment.topLeft,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),
                             decoration: BoxDecoration(
@@ -229,13 +246,20 @@ class _NoteViewScreenState extends ConsumerState<NoteViewScreen> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
+                              textDirection:
+                                  detectLanguage(string: widget.note.body) ==
+                                          'ar'
+                                      ? ui.TextDirection.rtl
+                                      : ui.TextDirection.ltr,
                               widget.note.body,
-                              style:
-                                  Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground,
-                                      ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground,
+                                  ),
                             ),
                           ),
                       ],

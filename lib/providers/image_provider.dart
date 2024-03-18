@@ -20,7 +20,6 @@ class ImageNotifier extends StateNotifier<File?> {
     final Directory appDocImageFolder = await _getPath();
     final list = appDocImageFolder.listSync(recursive: true);
     if (list.isEmpty) {
-      print('there is no image!');
       return null;
     }
     state = list.first as File?;

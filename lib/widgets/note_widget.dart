@@ -1,14 +1,16 @@
 import 'dart:math';
-
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:notes_app/screens/add_note_screen.dart';
+import 'package:notes_app/providers/localization_provider.dart';
 import 'package:notes_app/screens/home_screen.dart';
+import 'package:notes_app/utils/localization/detect_language.dart';
 
 import '../modules/note_module.dart';
 import '../providers/note_provider.dart';
 import '../screens/view_note_screen.dart';
+import '../utils/localization/app_localization.dart';
 
 extension on DateTime {
   bool isToday() {
@@ -38,17 +40,26 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
   late AnimationController _controller;
   late ColorTween _animation;
   late Color color;
+  late bool isEnglish;
+  late bool isDefLang;
 
   @override
   void initState() {
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
     color = mainColors[Random().nextInt(4)];
     super.initState();
   }
 
+  String get languageCode {
+    return detectLanguage(string: widget.note.title);
+  }
+
   @override
   Widget build(BuildContext context) {
+    isEnglish = ref.read(localizationProvider).languageCode == 'en';
+    isDefLang = ref.read(localizationProvider).languageCode !=
+        detectLanguage(string: widget.note.title);
     var tapPosition;
     return GestureDetector(
       onTap: () {
@@ -72,15 +83,15 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
               onTap: () {
                 ref.read(notesProvider.notifier).removeNote(widget.note);
               },
-              child: const Row(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(Icons.close),
-                  SizedBox(
+                  const Icon(Icons.close),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text('Remove')
+                  Text("remove".tr(context))
                 ],
               ),
             ),
@@ -98,11 +109,11 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(Icons.edit),
-                  SizedBox(
+                  const Icon(Icons.edit),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text('Edit'),
+                  Text("edit".tr(context)),
                 ],
               ),
             )
@@ -125,10 +136,14 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
             color: widget.note.color ?? color,
             borderRadius: BorderRadius.circular(20)),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isDefLang ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
+              textDirection: languageCode == 'ar'
+                  ? ui.TextDirection.rtl
+                  : ui.TextDirection.ltr,
               widget.note.title,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color: Colors.black87,
@@ -156,8 +171,8 @@ class _NoteWidgetNotifier extends ConsumerState<NoteWidget>
               width: double.infinity,
               child: Text(
                 widget.note.createdAt.isToday()
-                    ? DateFormat.jmz().format(widget.note.createdAt)
-                    : DateFormat.yMMMd().format(widget.note.createdAt),
+                    ? DateFormat.jmz(isEnglish ? null : 'ar').format(widget.note.createdAt)
+                    : DateFormat.yMMMd(isEnglish ? null : 'ar').format(widget.note.createdAt),
                 style: Theme.of(context).textTheme.labelSmall!.copyWith(
                       color: Colors.black38,
                     ),

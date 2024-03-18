@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:notes_app/utils/localization/app_localization.dart';
 
 class AddImageWidget extends StatefulWidget {
   const AddImageWidget({super.key, required this.image});
@@ -83,12 +84,14 @@ class CustomVerticalIconButton extends StatelessWidget {
           children: [
             Icon(icon,
                 size: size == null ? null : size! * .5, color: Colors.white60),
-            Text(
-              label,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Colors.white60),
+            FittedBox(
+              child: Text(
+                label,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: Colors.white60),
+              ),
             )
           ],
         ),
@@ -132,8 +135,6 @@ class PickImage {
   }
 
   void addImage() async {
-    print(image == null ? 'image: no' : 'image: yes');
-    print(isSet ? 'set: yes' : 'set: no');
     await showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -144,20 +145,21 @@ class PickImage {
             children: [
               CustomVerticalIconButton(
                 size: image != null && isSet ? null : size.height * .15,
-                label: 'Take Photo',
+                label: "take_photo".tr(context),
                 icon: Icons.add_a_photo_outlined,
                 action: () => _pickImage(ImageSource.camera),
               ),
               CustomVerticalIconButton(
-                  action: () => _pickImage(ImageSource.gallery),
-                  size: image != null && isSet ? null : size.height * .15,
-                  icon: Icons.add_photo_alternate_outlined,
-                  label: 'From Gallery'),
+                action: () => _pickImage(ImageSource.gallery),
+                size: image != null && isSet ? null : size.height * .15,
+                icon: Icons.add_photo_alternate_outlined,
+                label: "from_Gallery".tr(context),
+              ),
               if (image != null && isSet)
                 CustomVerticalIconButton(
                     size: null,
                     icon: Icons.close,
-                    label: 'Remove',
+                    label: "remove".tr(context),
                     action: () {
                       removeImage();
                       prevImage = false;

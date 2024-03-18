@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:notes_app/utils/localization/app_localization.dart';
+import 'package:notes_app/utils/localization/detect_language.dart';
 import 'package:notes_app/widgets/add_image_widget.dart';
 import 'package:notes_app/widgets/colors_widget.dart';
 
@@ -82,8 +85,11 @@ class _AddNoteScreenState extends State<AddNoteScreen>
     ));
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    Locale appLocale = Localizations.localeOf(context);
     _size = MediaQuery.of(context).size;
     _validate.stream.listen((event) {
       if (event) {
@@ -96,7 +102,6 @@ class _AddNoteScreenState extends State<AddNoteScreen>
         });
       }
     });
-    print(isTitle && isDesc);
     return Stack(
       children: [
         if (_image != null)
@@ -139,7 +144,7 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                     Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Text(
-                          'Title',
+                          'title'.tr(context),
                           style: Theme.of(context)
                               .textTheme
                               .labelMedium!
@@ -152,6 +157,7 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                       height: 5,
                     ),
                     TextFormField(
+                      textDirection: textDirection(appLocale, _title),
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground),
                       onSaved: (value) {
@@ -161,20 +167,21 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                         _focusNode.requestFocus();
                       },
                       key: _titleFormKey,
-                      onChanged: (_) {
+                      onChanged: (value) {
+                        _title = value;
                         isTitle = _titleFormKey.currentState!.validate();
                         _validate.sink.add(isDesc && isTitle);
                       },
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'please add valid title..';
+                          return "valid_title".tr(context);
                         }
                         return null;
                       },
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: _animation.value,
-                        hintText: 'Title..',
+                        hintText: "title_".tr(context),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide.none),
@@ -186,7 +193,7 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Text(
-                        'Description',
+                        "description".tr(context),
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -199,6 +206,7 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                       height: 5,
                     ),
                     TextFormField(
+                      textDirection: textDirection(appLocale, _desc),
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground),
                       onSaved: (value) {
@@ -206,13 +214,14 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                       },
                       focusNode: _focusNode,
                       key: _descFormKey,
-                      onChanged: (_) {
+                      onChanged: (value) {
+                        _desc = value;
                         isDesc = _descFormKey.currentState?.validate() ?? false;
                         _validate.sink.add(isDesc && isTitle);
                       },
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'please add valid description';
+                          return "valid_description".tr(context);
                         }
                         return null;
                       },
@@ -222,7 +231,7 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: _animation.value,
-                        hintText: 'Enter task description.',
+                        hintText: "task_description".tr(context),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide.none),
@@ -239,7 +248,6 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                               saveColor: (color) {
                                 setState(() {
                                   _controller.reset();
-                                  print(color);
                                   _oldColor = _selectedColor ?? Colors.white;
                                   _selectedColor = color ?? Colors.white;
                                   _controller.forward();
@@ -257,9 +265,11 @@ class _AddNoteScreenState extends State<AddNoteScreen>
                             image: (image) {
                               setState(() {
                                 _newImage = image;
-                                if(_newImage == null){
-                                  _controller2.reverse().then((value) => _image = _newImage);
-                                }else{
+                                if (_newImage == null) {
+                                  _controller2
+                                      .reverse()
+                                      .then((value) => _image = _newImage);
+                                } else {
                                   _image = _newImage;
                                   _controller2.forward();
                                 }
