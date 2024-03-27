@@ -2,7 +2,7 @@
 
 ![App Screenshot](https://github.com/talatsaleh/note_it/assets/56842486/64483df4-75bb-4555-a040-e2a55bae944b)
 
-### Descripiton
+### Description
 
 A notes app is a software application that allows you to create, edit, and manage your notes on your device. Notes can be text, images, audio, or other types of content that you want to remember or organize. A notes app can help you with various tasks, such as:
 
