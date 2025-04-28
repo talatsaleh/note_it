@@ -56,8 +56,8 @@ Built with **Flutter** and **Riverpod**, it saves your notes and images locally 
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/Not_it.git
-   cd Not_it
+   git clone https://github.com/talatsaleh/not_it.git
+   cd not_it
 
 
 
